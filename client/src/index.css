@@ -1,0 +1,380 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(47, 37%, 8%);
+  --muted: hsl(39, 14%, 96%);
+  --muted-foreground: hsl(25, 5.3%, 44.7%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(47, 37%, 8%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(47, 37%, 8%);
+  --border: hsl(20, 5.9%, 90%);
+  --input: hsl(20, 5.9%, 90%);
+  --primary: hsl(16, 100%, 61%);
+  --primary-foreground: hsl(210, 40%, 98%);
+  --secondary: hsl(39, 14%, 96%);
+  --secondary-foreground: hsl(24, 9.8%, 10%);
+  --accent: hsl(39, 14%, 96%);
+  --accent-foreground: hsl(24, 9.8%, 10%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(60, 9.1%, 97.8%);
+  --ring: hsl(47, 37%, 8%);
+  --radius: 0.5rem;
+
+  /* Kenyan theme colors */
+  --kenyan-orange: hsl(16, 100%, 61%);
+  --kenyan-red: hsl(0, 65%, 42%);
+  --kenyan-gold: hsl(43, 74%, 49%);
+  --kenyan-brown: hsl(25, 56%, 31%);
+  --kenyan-earth: hsl(22, 69%, 46%);
+  --kenyan-dark: hsl(47, 37%, 8%);
+  --kenyan-beige: hsl(60, 29%, 95%);
+  --kenyan-green: hsl(120, 61%, 34%);
+}
+
+.dark {
+  --background: hsl(240, 10%, 3.9%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 3.7%, 15.9%);
+  --muted-foreground: hsl(240, 5%, 64.9%);
+  --popover: hsl(240, 10%, 3.9%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 3.9%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 3.7%, 15.9%);
+  --input: hsl(240, 3.7%, 15.9%);
+  --primary: hsl(16, 100%, 61%);
+  --primary-foreground: hsl(210, 40%, 98%);
+  --secondary: hsl(240, 3.7%, 15.9%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(240, 3.7%, 15.9%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 4.9%, 83.9%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 2rem;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    overscroll-behavior: contain;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', Georgia, serif;
+  }
+}
+
+/* Enhanced smooth scrolling for better performance */
+@layer utilities {
+  .smooth-scroll {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: y proximity;
+  }
+  
+  .scroll-smooth {
+    scroll-behavior: smooth;
+  }
+  
+  /* Improved scrolling performance */
+  .scroll-container {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    transform: translateZ(0);
+    will-change: scroll-position;
+  }
+  
+  /* Momentum scrolling for iOS */
+  .momentum-scroll {
+    -webkit-overflow-scrolling: touch;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  .font-cultural {
+    font-family: 'Playfair Display', Georgia, serif;
+  }
+
+  .text-kenyan-orange {
+    color: var(--kenyan-orange);
+  }
+
+  .text-kenyan-red {
+    color: var(--kenyan-red);
+  }
+
+  .text-kenyan-gold {
+    color: var(--kenyan-gold);
+  }
+
+  .text-kenyan-brown {
+    color: var(--kenyan-brown);
+  }
+
+  .text-kenyan-earth {
+    color: var(--kenyan-earth);
+  }
+
+  .text-kenyan-dark {
+    color: var(--kenyan-dark);
+  }
+
+  .text-kenyan-beige {
+    color: var(--kenyan-beige);
+  }
+
+  .text-kenyan-green {
+    color: var(--kenyan-green);
+  }
+
+  .bg-kenyan-orange {
+    background-color: var(--kenyan-orange);
+  }
+
+  .bg-kenyan-red {
+    background-color: var(--kenyan-red);
+  }
+
+  .bg-kenyan-gold {
+    background-color: var(--kenyan-gold);
+  }
+
+  .bg-kenyan-brown {
+    background-color: var(--kenyan-brown);
+  }
+
+  .bg-kenyan-earth {
+    background-color: var(--kenyan-earth);
+  }
+
+  .bg-kenyan-dark {
+    background-color: var(--kenyan-dark);
+  }
+
+  .bg-kenyan-beige {
+    background-color: var(--kenyan-beige);
+  }
+
+  .bg-kenyan-green {
+    background-color: var(--kenyan-green);
+  }
+
+  .border-kenyan-orange {
+    border-color: var(--kenyan-orange);
+  }
+
+  .border-kenyan-red {
+    border-color: var(--kenyan-red);
+  }
+
+  .border-kenyan-dark {
+    border-color: var(--kenyan-dark);
+  }
+
+  .hover\:bg-kenyan-red:hover {
+    background-color: var(--kenyan-red);
+  }
+
+  .hover\:text-kenyan-orange:hover {
+    color: var(--kenyan-orange);
+  }
+
+  .focus\:ring-kenyan-orange:focus {
+    --tw-ring-color: var(--kenyan-orange);
+  }
+
+  .kenyan-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23FF6B35' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  .fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+
+  .slide-up {
+    animation: slideUp 0.8s ease-out forwards;
+  }
+
+  .bounce-in {
+    animation: bounceIn 1s ease-out forwards;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes bounceIn {
+    0% {
+      opacity: 0;
+      transform: scale(0.3);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+    70% {
+      transform: scale(0.9);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .btn-glow {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-glow::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+  }
+
+  .btn-glow:hover::before {
+    left: 100%;
+  }
+
+  /* Enhanced visual effects */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  }
+
+  .hover-float:hover {
+    transform: translateY(-8px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .gradient-kenyan {
+    background: linear-gradient(135deg, var(--kenyan-orange) 0%, var(--kenyan-gold) 50%, var(--kenyan-red) 100%);
+  }
+
+  .gradient-earth {
+    background: linear-gradient(135deg, var(--kenyan-brown) 0%, var(--kenyan-earth) 50%, var(--kenyan-gold) 100%);
+  }
+
+  .shadow-kenyan {
+    box-shadow: 0 10px 30px rgba(255, 107, 53, 0.2);
+  }
+
+  .text-shadow {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .pattern-dots {
+    background-image: radial-gradient(circle, rgba(255, 107, 53, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  .pattern-tribal {
+    background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23FF6B35' fill-opacity='0.05'%3E%3Cpath d='M20 20c0-11.046 8.954-20 20-20v20H20z'/%3E%3Cpath d='M0 20c11.046 0 20-8.954 20-20H0v20z'/%3E%3Cpath d='M20 40c0-11.046-8.954-20-20-20v20h20z'/%3E%3Cpath d='M40 20c-11.046 0-20 8.954-20 20h20V20z'/%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  .pulse-kenyan {
+    animation: pulseKenyan 2s infinite;
+  }
+
+  @keyframes pulseKenyan {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.7);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgba(255, 107, 53, 0);
+    }
+  }
+
+  .rotate-slow {
+    animation: rotateSlow 20s linear infinite;
+  }
+
+  @keyframes rotateSlow {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .shimmer {
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  .parallax-bg {
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .kenyan-card {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 107, 53, 0.2);
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+
+  .hero-pattern {
+    background-image: 
+      radial-gradient(circle at 25% 25%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, rgba(218, 165, 32, 0.1) 0%, transparent 50%),
+      linear-gradient(135deg, rgba(255, 107, 53, 0.05) 0%, rgba(218, 165, 32, 0.05) 100%);
+  }
+}

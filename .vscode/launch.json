@@ -1,0 +1,31 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch Development Server",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/server/index.ts",
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    },
+    {
+      "name": "Debug Server",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/server/index.ts",
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "runtimeExecutable": "tsx",
+      "runtimeArgs": ["--inspect", "${workspaceFolder}/server/index.ts"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    }
+  ]
+}

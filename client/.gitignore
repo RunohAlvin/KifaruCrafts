@@ -57,7 +57,7 @@ jspm_packages/
 # Replit specific
 .replit
 .upm
-.env
+
 # Temporary files
 *.tmp
 *.temp

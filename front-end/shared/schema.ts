@@ -44,7 +44,7 @@ export const categorySchema = z.object({
 
 // MongoDB Product Schema
 export const productSchema = z.object({
-  id: z.string().optional(),
+  //id: z.string().optional(),
   name: z.string().min(1, "Product name is required"),
   description: z.string().min(1, "Product description is required"),
   price: z.string().min(1, "Product price is required"), // Store as string to avoid floating point issues

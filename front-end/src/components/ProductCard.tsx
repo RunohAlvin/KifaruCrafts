@@ -8,7 +8,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { getPriceWithConversion } from "@/lib/currency";
 import { useCurrencyStore } from "@/lib/store";
-import type { Product } from "@shared/schema";
+import type { Product } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { User, ExternalLink } from "lucide-react";
 
@@ -33,7 +33,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   });
 
   const addToCartMutation = useMutation({
-    mutationFn: (productId: number) =>
+    mutationFn: (productId: string) =>
       apiRequest("POST", "/api/cart", { productId, quantity: 1 }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/cart"] });
@@ -42,7 +42,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         description: `${product.name} has been added to your cart.`,
       });
     },
-    onError: (error: any) => {
+    onError: (error: { message: string }) => {
       if (error.message.includes("401")) {
         toast({
           title: "Login Required",
@@ -65,7 +65,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
-    addToCartMutation.mutate(product.id);
+    addToCartMutation.mutate(product?._id as string);
   };
 
   const priceDisplay = getPriceWithConversion(product.price, userCurrency);
@@ -73,7 +73,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   return (
     <Card className="bg-white rounded-2xl shadow-lg overflow-hidden group hover:shadow-2xl hover-float transition-all duration-300 border-0 kenyan-card">
       <div className="relative overflow-hidden">
-        <Link href={`/product/${product.id}`}>
+        <Link href={`/product/${product?._id}`}>
           <img
             src={product.image}
             alt={product.name}
@@ -103,7 +103,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         )}
       </div>
       <CardContent className="p-6">
-        <Link href={`/product/${product.id}`}>
+        <Link href={`/product/${product?._id}`}>
           <h3 className="font-semibold text-lg text-kenyan-dark mb-2 hover:text-kenyan-orange transition-colors">
             {product.name}
           </h3>

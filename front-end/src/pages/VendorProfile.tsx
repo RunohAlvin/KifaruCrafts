@@ -3,43 +3,18 @@ import { useRoute } from "wouter";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { MapPin, Phone, Star, Calendar, Award, Mail } from "lucide-react";
+import { MapPin, Phone, Calendar, Award, Mail } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
 import { formatKESPrice } from "@/lib/currency";
 
-interface Vendor {
-  id: number;
-  email: string;
-  firstName: string | null;
-  lastName: string | null;
-  businessName: string | null;
-  bio: string | null;
-  location: string | null;
-  phone: string | null;
-  specialties: string | null;
-  yearsOfExperience: number | null;
-  isVerified: boolean;
-  profileImageUrl: string | null;
-  createdAt: string;
-}
 
-interface Product {
-  id: number;
-  name: string;
-  description: string;
-  price: string;
-  image: string;
-  categoryId: number;
-  vendorId: number;
-  featured: boolean;
-  badge: string | null;
-  stock: number;
-}
+
 
 export default function VendorProfile() {
-  const [match, params] = useRoute("/vendors/:id");
-  const vendorId = params?.id ? parseInt(params.id) : 0;
-
+  const [params ] = useRoute("/vendors/:id");
+  if (!params || !params.id) {
+    return <div className="container mx-auto px-4 py-8">Vendor not found</div
+const {id: vendorId} = params || {};
   const { data: vendor, isLoading: vendorLoading } = useQuery({
     queryKey: ["/api/vendors", vendorId],
     queryFn: async () => {

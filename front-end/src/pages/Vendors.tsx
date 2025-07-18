@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { MapPin, Star, Award, Users, Package } from "lucide-react";
+import { MapPin, Award, Users, Package } from "lucide-react";
 
 interface Vendor {
   id: number;

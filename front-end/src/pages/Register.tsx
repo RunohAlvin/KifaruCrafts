@@ -1,13 +1,31 @@
-import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { registerUserSchema } from "@shared/schema";
@@ -42,7 +60,7 @@ export default function Register() {
         description: "Your account has been created successfully.",
       });
       queryClient.invalidateQueries({ queryKey: ["/api/auth/me"] });
-      
+
       // Redirect based on user role with null checking
       if (response?.user?.role === "vendor") {
         setLocation("/vendor-dashboard");
@@ -75,7 +93,9 @@ export default function Register() {
               </h1>
             </div>
           </Link>
-          <p className="text-gray-600">Join our community of artisans and buyers</p>
+          <p className="text-gray-600">
+            Join our community of artisans and buyers
+          </p>
         </div>
 
         <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
@@ -89,7 +109,10 @@ export default function Register() {
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-4"
+              >
                 <div className="grid grid-cols-2 gap-4">
                   <FormField
                     control={form.control}
@@ -172,7 +195,10 @@ export default function Register() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>I want to join as</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
                         <FormControl>
                           <SelectTrigger className="h-11">
                             <SelectValue placeholder="Select your role" />

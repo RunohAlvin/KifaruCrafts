@@ -1,13 +1,11 @@
-import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "wouter";
 import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
-import { getPriceWithConversion, formatKESPrice } from "@/lib/currency";
+import { formatKESPrice } from "@/lib/currency";
 import { useCurrencyStore } from "@/lib/store";
 
 interface CartItemWithProduct {
@@ -95,8 +93,10 @@ export default function Cart() {
 
   const getTotalPrice = () => {
     if (!cartItems) return 0;
-    return cartItems
-      .reduce((total, item) => total + parseFloat(item.product.price) * item.quantity, 0);
+    return cartItems.reduce(
+      (total, item) => total + parseFloat(item.product.price) * item.quantity,
+      0
+    );
   };
 
   const getTotalItems = () => {
@@ -139,8 +139,12 @@ export default function Cart() {
           <Card className="text-center py-12">
             <CardContent>
               <ShoppingBag className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <h2 className="text-xl font-semibold text-gray-600 mb-2">Your cart is empty</h2>
-              <p className="text-gray-500 mb-6">Add some beautiful Kenyan crafts to get started!</p>
+              <h2 className="text-xl font-semibold text-gray-600 mb-2">
+                Your cart is empty
+              </h2>
+              <p className="text-gray-500 mb-6">
+                Add some beautiful Kenyan crafts to get started!
+              </p>
               <Link href="/products">
                 <Button className="bg-kenyan-orange hover:bg-kenyan-red">
                   Continue Shopping
@@ -158,7 +162,8 @@ export default function Cart() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="font-cultural text-3xl md:text-4xl font-bold text-kenyan-dark">
-            Shopping Cart ({getTotalItems()} item{getTotalItems() !== 1 ? "s" : ""})
+            Shopping Cart ({getTotalItems()} item
+            {getTotalItems() !== 1 ? "s" : ""})
           </h1>
           {cartItems.length > 0 && (
             <Button
@@ -175,8 +180,10 @@ export default function Cart() {
         {/* Currency Information Banner */}
         <div className="bg-kenyan-orange/10 border border-kenyan-orange/20 rounded-lg p-4 mb-6">
           <div className="flex items-center justify-center text-sm text-kenyan-dark">
-            <span className="font-medium">💰 All prices shown in Kenyan Shillings (KES)</span>
-            {userCurrency !== 'KES' && (
+            <span className="font-medium">
+              💰 All prices shown in Kenyan Shillings (KES)
+            </span>
+            {userCurrency !== "KES" && (
               <span className="ml-2 text-gray-600">
                 • Converted to {userCurrency} where applicable
               </span>
@@ -198,7 +205,7 @@ export default function Cart() {
                         className="w-16 h-16 object-cover rounded-lg shadow hover:opacity-80 transition-opacity"
                       />
                     </Link>
-                    
+
                     <div className="flex-1">
                       <Link href={`/product/${item.product.id}`}>
                         <h3 className="font-semibold text-lg text-kenyan-dark hover:text-kenyan-orange transition-colors">
@@ -214,21 +221,30 @@ export default function Cart() {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        disabled={item.quantity <= 1 || updateQuantityMutation.isPending}
+                        onClick={() =>
+                          updateQuantity(item.id, item.quantity - 1)
+                        }
+                        disabled={
+                          item.quantity <= 1 || updateQuantityMutation.isPending
+                        }
                       >
                         <Minus className="w-4 h-4" />
                       </Button>
-                      
+
                       <span className="w-8 text-center font-semibold">
                         {item.quantity}
                       </span>
-                      
+
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        disabled={item.quantity >= item.product.stock || updateQuantityMutation.isPending}
+                        onClick={() =>
+                          updateQuantity(item.id, item.quantity + 1)
+                        }
+                        disabled={
+                          item.quantity >= item.product.stock ||
+                          updateQuantityMutation.isPending
+                        }
                       >
                         <Plus className="w-4 h-4" />
                       </Button>
@@ -236,7 +252,10 @@ export default function Cart() {
 
                     <div className="text-right">
                       <div className="font-bold text-lg">
-                        ${(parseFloat(item.product.price) * item.quantity).toFixed(2)}
+                        $
+                        {(
+                          parseFloat(item.product.price) * item.quantity
+                        ).toFixed(2)}
                       </div>
                       <Button
                         variant="ghost"
@@ -276,16 +295,19 @@ export default function Cart() {
                 <div className="border-t pt-4 flex justify-between font-bold text-lg">
                   <span>Total</span>
                   <span className="text-kenyan-orange">
-                    {formatKESPrice((getTotalPrice() >= 2500 
-                      ? getTotalPrice() 
-                      : getTotalPrice() + 500
-                    ).toString())}
+                    {formatKESPrice(
+                      (getTotalPrice() >= 2500
+                        ? getTotalPrice()
+                        : getTotalPrice() + 500
+                      ).toString()
+                    )}
                   </span>
                 </div>
-                
+
                 {getTotalPrice() < 2500 && (
                   <p className="text-sm text-gray-600">
-                    Add {formatKESPrice((2500 - getTotalPrice()).toString())} more for free shipping!
+                    Add {formatKESPrice((2500 - getTotalPrice()).toString())}{" "}
+                    more for free shipping!
                   </p>
                 )}
 
@@ -297,7 +319,10 @@ export default function Cart() {
 
                 <div className="text-center">
                   <Link href="/products">
-                    <Button variant="outline" className="text-kenyan-dark border-kenyan-dark hover:bg-kenyan-beige">
+                    <Button
+                      variant="outline"
+                      className="text-kenyan-dark border-kenyan-dark hover:bg-kenyan-beige"
+                    >
                       Continue Shopping
                     </Button>
                   </Link>

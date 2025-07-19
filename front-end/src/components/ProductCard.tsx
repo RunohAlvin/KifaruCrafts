@@ -2,18 +2,22 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { getPriceWithConversion } from "@/lib/currency";
 import { useCurrencyStore } from "@/lib/store";
-import type { Product } from "@/types";
+import type { ApiProduct } from "@/types/api";
 import { useQuery } from "@tanstack/react-query";
 import { User, ExternalLink } from "lucide-react";
 
 interface ProductCardProps {
-  product: Product;
+  product: ApiProduct;
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
@@ -42,7 +46,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         description: `${product.name} has been added to your cart.`,
       });
     },
-    onError: (error: { message: string }) => {
+    onError: (error: any) => {
       if (error.message.includes("401")) {
         toast({
           title: "Login Required",
@@ -65,7 +69,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
-    addToCartMutation.mutate(product?._id as string);
+    addToCartMutation.mutate(String(product.id || product._id));
   };
 
   const priceDisplay = getPriceWithConversion(product.price, userCurrency);
@@ -73,7 +77,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   return (
     <Card className="bg-white rounded-2xl shadow-lg overflow-hidden group hover:shadow-2xl hover-float transition-all duration-300 border-0 kenyan-card">
       <div className="relative overflow-hidden">
-        <Link href={`/product/${product?._id}`}>
+        <Link href={`/product/${product.id}`}>
           <img
             src={product.image}
             alt={product.name}
@@ -103,45 +107,62 @@ export default function ProductCard({ product }: ProductCardProps) {
         )}
       </div>
       <CardContent className="p-6">
-        <Link href={`/product/${product?._id}`}>
+        <Link href={`/product/${product.id}`}>
           <h3 className="font-semibold text-lg text-kenyan-dark mb-2 hover:text-kenyan-orange transition-colors">
             {product.name}
           </h3>
         </Link>
-        <p className="text-gray-600 text-sm mb-3 line-clamp-2">{product.description}</p>
-        
+        <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+          {product.description}
+        </p>
+
         {/* Vendor Information */}
         {vendor && (
           <div className="mb-3 p-2 bg-gray-50 rounded-lg">
-            <Link href={`/vendors/${vendor.id}`} className="flex items-center gap-2 text-xs text-gray-600 hover:text-kenyan-orange transition-colors group">
+            <Link
+              href={`/vendors/${vendor.id}`}
+              className="flex items-center gap-2 text-xs text-gray-600 hover:text-kenyan-orange transition-colors group"
+            >
               <User className="w-3 h-3" />
               <span className="font-medium">
-                By {vendor.businessName || `${vendor.firstName || ""} ${vendor.lastName || ""}`.trim()}
+                By{" "}
+                {vendor.businessName ||
+                  `${vendor.firstName || ""} ${vendor.lastName || ""}`.trim()}
               </span>
               <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
             </Link>
             {vendor.location && (
-              <p className="text-xs text-gray-500 mt-1 ml-5">{vendor.location}</p>
+              <p className="text-xs text-gray-500 mt-1 ml-5">
+                {vendor.location}
+              </p>
             )}
           </div>
         )}
-        
+
         <div className="flex items-center justify-between">
           <div className="flex flex-col">
             {priceDisplay.secondary ? (
               <Tooltip>
                 <TooltipTrigger asChild>
                   <div className="cursor-help">
-                    <span className="text-xl font-bold text-kenyan-orange">{priceDisplay.primary}</span>
-                    <div className="text-xs text-gray-500">{priceDisplay.secondary}</div>
+                    <span className="text-xl font-bold text-kenyan-orange">
+                      {priceDisplay.primary}
+                    </span>
+                    <div className="text-xs text-gray-500">
+                      {priceDisplay.secondary}
+                    </div>
                   </div>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Original price in Kenyan Shillings: {priceDisplay.secondary}</p>
+                  <p>
+                    Original price in Kenyan Shillings: {priceDisplay.secondary}
+                  </p>
                 </TooltipContent>
               </Tooltip>
             ) : (
-              <span className="text-xl font-bold text-kenyan-orange">{priceDisplay.primary}</span>
+              <span className="text-xl font-bold text-kenyan-orange">
+                {priceDisplay.primary}
+              </span>
             )}
           </div>
           <Button
@@ -150,16 +171,16 @@ export default function ProductCard({ product }: ProductCardProps) {
             className="bg-kenyan-orange text-white px-4 py-2 rounded-xl hover:bg-kenyan-red transition-all duration-300 disabled:opacity-50 min-w-fit text-sm font-bold btn-glow shadow-lg hover:shadow-kenyan transform hover:scale-105"
             size="sm"
           >
-            {addToCartMutation.isPending
-              ? (
-                <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  Adding...
-                </div>
-              )
-              : product.stock === 0
-              ? "Out of Stock"
-              : "Add to Cart"}
+            {addToCartMutation.isPending ? (
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                Adding...
+              </div>
+            ) : product.stock === 0 ? (
+              "Out of Stock"
+            ) : (
+              "Add to Cart"
+            )}
           </Button>
         </div>
       </CardContent>

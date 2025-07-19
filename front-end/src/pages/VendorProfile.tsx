@@ -1,20 +1,27 @@
 import { useQuery } from "@tanstack/react-query";
 import { useRoute } from "wouter";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MapPin, Phone, Calendar, Award, Mail } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
-import { formatKESPrice } from "@/lib/currency";
-
-
-
+import type { ApiProduct } from "@/types/api";
 
 export default function VendorProfile() {
-  const [params ] = useRoute("/vendors/:id");
-  if (!params || !params.id) {
-    return <div className="container mx-auto px-4 py-8">Vendor not found</div
-const {id: vendorId} = params || {};
+  const [params] = useRoute("/vendors/:id");
+
+  // Handle the case where params is boolean (route doesn't match) or missing id
+  if (!params || typeof params === "boolean" || !("id" in params)) {
+    return <div className="container mx-auto px-4 py-8">Vendor not found</div>;
+  }
+
+  const { id: vendorId } = params as { id: string };
   const { data: vendor, isLoading: vendorLoading } = useQuery({
     queryKey: ["/api/vendors", vendorId],
     queryFn: async () => {
@@ -51,12 +58,18 @@ const {id: vendorId} = params || {};
     return (
       <div className="container mx-auto px-4 py-8 text-center">
         <h1 className="text-2xl font-bold mb-4">Vendor Not Found</h1>
-        <p className="text-gray-600">The vendor you're looking for doesn't exist.</p>
+        <p className="text-gray-600">
+          The vendor you're looking for doesn't exist.
+        </p>
       </div>
     );
   }
 
-  const getInitials = (firstName: string | null, lastName: string | null, businessName: string | null) => {
+  const getInitials = (
+    firstName: string | null,
+    lastName: string | null,
+    businessName: string | null
+  ) => {
     if (firstName && lastName) {
       return `${firstName[0]}${lastName[0]}`.toUpperCase();
     }
@@ -66,7 +79,10 @@ const {id: vendorId} = params || {};
     return "V";
   };
 
-  const displayName = vendor.businessName || `${vendor.firstName || ""} ${vendor.lastName || ""}`.trim() || "Vendor";
+  const displayName =
+    vendor.businessName ||
+    `${vendor.firstName || ""} ${vendor.lastName || ""}`.trim() ||
+    "Vendor";
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -75,24 +91,36 @@ const {id: vendorId} = params || {};
         <CardHeader>
           <div className="flex flex-col md:flex-row gap-6 items-start">
             <Avatar className="w-24 h-24">
-              <AvatarImage src={vendor.profileImageUrl || undefined} alt={displayName} />
+              <AvatarImage
+                src={vendor.profileImageUrl || undefined}
+                alt={displayName}
+              />
               <AvatarFallback className="text-2xl">
-                {getInitials(vendor.firstName, vendor.lastName, vendor.businessName)}
+                {getInitials(
+                  vendor.firstName,
+                  vendor.lastName,
+                  vendor.businessName
+                )}
               </AvatarFallback>
             </Avatar>
-            
+
             <div className="flex-1 space-y-4">
               <div>
                 <div className="flex items-center gap-2 mb-2">
                   <CardTitle className="text-3xl">{displayName}</CardTitle>
                   {vendor.isVerified && (
-                    <Badge variant="secondary" className="bg-green-100 text-green-800 px-3 py-1">
+                    <Badge
+                      variant="secondary"
+                      className="bg-green-100 text-green-800 px-3 py-1"
+                    >
                       <Award className="w-3 h-3 mr-2" />
-                      <span className="text-sm font-medium">Verified Artisan</span>
+                      <span className="text-sm font-medium">
+                        Verified Artisan
+                      </span>
                     </Badge>
                   )}
                 </div>
-                
+
                 <div className="flex flex-wrap gap-4 text-sm text-gray-600 mb-4">
                   {vendor.location && (
                     <div className="flex items-center gap-1">
@@ -101,7 +129,7 @@ const {id: vendorId} = params || {};
                     </div>
                   )}
                   {vendor.phone && (
-                    <a 
+                    <a
                       href={`tel:${vendor.phone}`}
                       className="flex items-center gap-1 text-kenyan-orange hover:text-orange-600 transition-colors cursor-pointer"
                     >
@@ -110,7 +138,7 @@ const {id: vendorId} = params || {};
                     </a>
                   )}
                   {vendor.email && (
-                    <a 
+                    <a
                       href={`mailto:${vendor.email}`}
                       className="flex items-center gap-1 text-kenyan-orange hover:text-orange-600 transition-colors cursor-pointer"
                     >
@@ -128,11 +156,13 @@ const {id: vendorId} = params || {};
 
                 {vendor.specialties && (
                   <div className="flex flex-wrap gap-2 mb-4">
-                    {vendor.specialties.split(',').map((specialty: string, index: number) => (
-                      <Badge key={index} variant="outline">
-                        {specialty.trim()}
-                      </Badge>
-                    ))}
+                    {vendor.specialties
+                      .split(",")
+                      .map((specialty: string, index: number) => (
+                        <Badge key={index} variant="outline">
+                          {specialty.trim()}
+                        </Badge>
+                      ))}
                   </div>
                 )}
               </div>
@@ -152,7 +182,7 @@ const {id: vendorId} = params || {};
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold">Products by {displayName}</h2>
           <Badge variant="secondary" className="text-sm">
-            {products.length} {products.length === 1 ? 'product' : 'products'}
+            {products.length} {products.length === 1 ? "product" : "products"}
           </Badge>
         </div>
 
@@ -170,15 +200,19 @@ const {id: vendorId} = params || {};
           </div>
         ) : products.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {products.map((product: Product) => (
-              <ProductCard key={product.id} product={product} />
+            {products.map((product: ApiProduct) => (
+              <ProductCard key={product._id || product.id} product={product} />
             ))}
           </div>
         ) : (
           <Card>
             <CardContent className="text-center py-12">
-              <p className="text-gray-600 mb-4">No products available from this vendor yet.</p>
-              <p className="text-sm text-gray-500">Check back soon for new items!</p>
+              <p className="text-gray-600 mb-4">
+                No products available from this vendor yet.
+              </p>
+              <p className="text-sm text-gray-500">
+                Check back soon for new items!
+              </p>
             </CardContent>
           </Card>
         )}

@@ -3,10 +3,9 @@ import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import ProductCard from "@/components/ProductCard";
 import { Search } from "lucide-react";
-import type { Product, Category } from "@shared/schema";
+import type { ApiProduct, ApiCategory } from "@/types/api";
 
 export default function Products() {
   const [location] = useLocation();
@@ -28,7 +27,7 @@ export default function Products() {
     }
   }, [location]);
 
-  const { data: categories } = useQuery<Category[]>({
+  const { data: categories } = useQuery<ApiCategory[]>({
     queryKey: ["/api/categories"],
   });
 
@@ -53,7 +52,11 @@ export default function Products() {
     return queryString;
   };
 
-  const { data: products, isLoading, error } = useQuery<Product[]>({
+  const {
+    data: products,
+    isLoading,
+    error,
+  } = useQuery<ApiProduct[]>({
     queryKey: [productsQuery()],
   });
 
@@ -67,14 +70,16 @@ export default function Products() {
     if (searchQuery.trim()) {
       params.append("search", searchQuery.trim());
     }
-    
-    const newUrl = params.toString() ? `/products?${params.toString()}` : "/products";
+
+    const newUrl = params.toString()
+      ? `/products?${params.toString()}`
+      : "/products";
     window.history.pushState({}, "", newUrl);
   };
 
   const handleCategoryChange = (value: string) => {
     setSelectedCategory(value);
-    
+
     const params = new URLSearchParams();
     if (value !== "all") {
       params.append("category", value);
@@ -82,12 +87,17 @@ export default function Products() {
     if (searchQuery.trim()) {
       params.append("search", searchQuery.trim());
     }
-    
-    const newUrl = params.toString() ? `/products?${params.toString()}` : "/products";
+
+    const newUrl = params.toString()
+      ? `/products?${params.toString()}`
+      : "/products";
     window.history.pushState({}, "", newUrl);
   };
 
-  const selectedCategoryName = categories?.find(cat => cat.id.toString() === selectedCategory)?.name || "All Products";
+  const selectedCategoryName =
+    categories?.find(
+      (cat) => (cat.id || cat._id)?.toString() === selectedCategory
+    )?.name || "All Products";
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-kenyan-beige via-white to-kenyan-beige hero-pattern">
@@ -114,7 +124,8 @@ export default function Products() {
             )}
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed fade-in">
-            Discover authentic Kenyan crafts made by skilled artisans with centuries of cultural tradition
+            Discover authentic Kenyan crafts made by skilled artisans with
+            centuries of cultural tradition
           </p>
         </div>
 
@@ -123,13 +134,15 @@ export default function Products() {
           {/* Category Buttons - Made More Prominent */}
           {categories && (
             <div className="mb-8">
-              <h3 className="text-2xl font-cultural font-bold text-kenyan-dark mb-6 text-center">Shop by Category</h3>
+              <h3 className="text-2xl font-cultural font-bold text-kenyan-dark mb-6 text-center">
+                Shop by Category
+              </h3>
               <div className="flex flex-wrap justify-center gap-4 max-w-6xl mx-auto">
                 <Button
                   onClick={() => handleCategoryChange("all")}
                   className={`px-8 py-4 rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 shadow-lg ${
-                    selectedCategory === "all" 
-                      ? "bg-kenyan-dark text-white shadow-xl ring-2 ring-kenyan-orange" 
+                    selectedCategory === "all"
+                      ? "bg-kenyan-dark text-white shadow-xl ring-2 ring-kenyan-orange"
                       : "bg-white/90 backdrop-blur-sm text-kenyan-dark border-2 border-kenyan-orange/30 hover:bg-kenyan-orange hover:text-white"
                   }`}
                 >
@@ -137,18 +150,26 @@ export default function Products() {
                 </Button>
                 {categories.map((category) => (
                   <Button
-                    key={category.id}
-                    onClick={() => handleCategoryChange(category.id.toString())}
+                    key={category.id || category._id}
+                    onClick={() =>
+                      handleCategoryChange(
+                        (category.id || category._id)?.toString() || ""
+                      )
+                    }
                     className={`px-8 py-4 rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 shadow-lg ${
-                      selectedCategory === category.id.toString()
-                        ? "bg-kenyan-orange text-white shadow-xl ring-2 ring-kenyan-gold" 
+                      selectedCategory ===
+                      (category.id || category._id)?.toString()
+                        ? "bg-kenyan-orange text-white shadow-xl ring-2 ring-kenyan-gold"
                         : "bg-white/90 backdrop-blur-sm text-kenyan-dark border-2 border-kenyan-orange/30 hover:bg-kenyan-orange hover:text-white"
                     }`}
                   >
-                    {category.name === "Jewelry & Beadwork" ? "💎 Jewelry & Beadwork" : 
-                     category.name === "Traditional Crafts" ? "🎨 Traditional Crafts" :
-                     category.name === "Textiles & Fabrics" ? "🧵 Textiles & Fabrics" :
-                     category.name}
+                    {category.name === "Jewelry & Beadwork"
+                      ? "💎 Jewelry & Beadwork"
+                      : category.name === "Traditional Crafts"
+                      ? "🎨 Traditional Crafts"
+                      : category.name === "Textiles & Fabrics"
+                      ? "🧵 Textiles & Fabrics"
+                      : category.name}
                   </Button>
                 ))}
               </div>
@@ -163,8 +184,8 @@ export default function Products() {
                 variant={featuredOnly ? "default" : "outline"}
                 onClick={() => setFeaturedOnly(!featuredOnly)}
                 className={`px-6 py-2.5 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 ${
-                  featuredOnly 
-                    ? "bg-kenyan-gold text-kenyan-dark shadow-lg hover:shadow-xl" 
+                  featuredOnly
+                    ? "bg-kenyan-gold text-kenyan-dark shadow-lg hover:shadow-xl"
                     : "border border-kenyan-orange text-kenyan-orange hover:bg-kenyan-orange hover:text-white"
                 }`}
               >
@@ -182,8 +203,8 @@ export default function Products() {
                     className="pl-10 pr-20 py-2.5 text-sm bg-white/80 backdrop-blur-sm border border-kenyan-orange/20 shadow-md rounded-xl focus:ring-2 focus:ring-kenyan-orange/30 transition-all duration-300"
                   />
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-kenyan-orange/60 group-focus-within:text-kenyan-orange transition-colors" />
-                  <Button 
-                    type="submit" 
+                  <Button
+                    type="submit"
                     className="absolute right-1.5 top-1/2 transform -translate-y-1/2 bg-kenyan-orange hover:bg-kenyan-red text-white px-3 py-1 rounded-lg font-semibold transition-all duration-300 text-xs"
                   >
                     Go
@@ -197,13 +218,19 @@ export default function Products() {
         {/* Enhanced Category Visual Cards - Only when no search query */}
         {categories && !searchQuery && selectedCategory === "all" && (
           <div className="mb-12">
-            <h3 className="text-2xl font-cultural font-bold text-kenyan-dark mb-8 text-center">Explore Our Collections</h3>
+            <h3 className="text-2xl font-cultural font-bold text-kenyan-dark mb-8 text-center">
+              Explore Our Collections
+            </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {categories.map((category) => (
                 <div
-                  key={category.id}
+                  key={category.id || category._id}
                   className="group relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 hover-float kenyan-card hover:shadow-xl"
-                  onClick={() => handleCategoryChange(category.id.toString())}
+                  onClick={() =>
+                    handleCategoryChange(
+                      (category.id || category._id)?.toString() || ""
+                    )
+                  }
                 >
                   <div className="aspect-video relative overflow-hidden">
                     <img
@@ -215,12 +242,17 @@ export default function Products() {
                   </div>
                   <div className="absolute inset-0 p-6 flex flex-col justify-end">
                     <h4 className="text-xl font-cultural font-bold text-white mb-2 text-shadow">
-                      {category.name === "Jewelry & Beadwork" ? "💎 Jewelry & Beadwork" : 
-                       category.name === "Traditional Crafts" ? "🎨 Traditional Crafts" :
-                       category.name === "Textiles & Fabrics" ? "🧵 Textiles & Fabrics" :
-                       category.name}
+                      {category.name === "Jewelry & Beadwork"
+                        ? "💎 Jewelry & Beadwork"
+                        : category.name === "Traditional Crafts"
+                        ? "🎨 Traditional Crafts"
+                        : category.name === "Textiles & Fabrics"
+                        ? "🧵 Textiles & Fabrics"
+                        : category.name}
                     </h4>
-                    <p className="text-sm text-white/90 leading-relaxed">{category.description}</p>
+                    <p className="text-sm text-white/90 leading-relaxed">
+                      {category.description}
+                    </p>
                   </div>
                   <div className="absolute top-4 right-4 w-10 h-10 bg-kenyan-orange/80 rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <span className="text-white text-sm">→</span>
@@ -234,7 +266,9 @@ export default function Products() {
         {/* Results */}
         {error ? (
           <div className="text-center py-8">
-            <p className="text-red-600">Failed to load products. Please try again.</p>
+            <p className="text-red-600">
+              Failed to load products. Please try again.
+            </p>
           </div>
         ) : isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
@@ -255,15 +289,16 @@ export default function Products() {
           <>
             <div className="mb-8 text-center">
               <div className="inline-flex items-center px-6 py-3 bg-kenyan-orange/10 backdrop-blur-sm rounded-full text-kenyan-orange font-semibold border border-kenyan-orange/20">
-                ✨ Showing {products.length} beautiful craft{products.length !== 1 ? "s" : ""} ✨
+                ✨ Showing {products.length} beautiful craft
+                {products.length !== 1 ? "s" : ""} ✨
               </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 animate-fade-in">
               {products.map((product, index) => (
-                <div 
-                  key={product.id} 
+                <div
+                  key={product.id}
                   className="animate-scale-in"
-                  style={{animationDelay: `${index * 0.1}s`}}
+                  style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   <ProductCard product={product} />
                 </div>
@@ -276,9 +311,12 @@ export default function Products() {
               <div className="w-24 h-24 bg-kenyan-orange/10 rounded-full flex items-center justify-center mx-auto mb-6">
                 <span className="text-4xl">🔍</span>
               </div>
-              <div className="text-gray-500 text-2xl font-cultural mb-4">No crafts found</div>
+              <div className="text-gray-500 text-2xl font-cultural mb-4">
+                No crafts found
+              </div>
               <p className="text-gray-400 text-lg max-w-md mx-auto leading-relaxed">
-                Try adjusting your search terms or explore our beautiful categories below
+                Try adjusting your search terms or explore our beautiful
+                categories below
               </p>
             </div>
             <Button

@@ -3,15 +3,18 @@ import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import ProductCard from "@/components/ProductCard";
-import CategoryCard from "@/components/CategoryCard";
 import type { Product, Category } from "@shared/schema";
 
 export default function Home() {
-  const { data: categories, isLoading: categoriesLoading } = useQuery<Category[]>({
+  const { data: categories, isLoading: categoriesLoading } = useQuery<
+    Category[]
+  >({
     queryKey: ["/api/categories"],
   });
 
-  const { data: featuredProducts, isLoading: productsLoading } = useQuery<Product[]>({
+  const { data: featuredProducts, isLoading: productsLoading } = useQuery<
+    Product[]
+  >({
     queryKey: ["/api/products?featured=true"],
   });
 
@@ -22,17 +25,18 @@ export default function Home() {
         <div className="absolute inset-0 bg-black opacity-40"></div>
         <div
           style={{
-            backgroundImage: "url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=800')",
+            backgroundImage:
+              "url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=800')",
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
           className="absolute inset-0"
         ></div>
-        
+
         {/* Floating elements for visual appeal */}
         <div className="absolute top-20 right-20 w-32 h-32 bg-kenyan-gold opacity-15 rounded-full blur-xl animate-pulse hidden lg:block"></div>
         <div className="absolute bottom-32 left-16 w-24 h-24 bg-kenyan-orange opacity-20 rounded-full blur-lg animate-bounce hidden lg:block"></div>
-        
+
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 w-full">
           <div className="text-center">
             <div className="mb-6">
@@ -41,18 +45,21 @@ export default function Home() {
                 Authentic • Handcrafted • Fair Trade
               </span>
             </div>
-            
+
             <h1 className="font-cultural text-5xl md:text-7xl font-bold mb-6 leading-tight">
               Kifaru Crafts
               <span className="block text-3xl md:text-4xl mt-2 text-kenyan-beige opacity-90">
                 Where Heritage Meets Art
               </span>
             </h1>
-            
+
             <p className="text-xl md:text-2xl mb-10 max-w-4xl mx-auto leading-relaxed opacity-95">
-              Connect with Kenya's finest artisans and discover one-of-a-kind treasures that carry the soul of our rich cultural heritage. Every purchase supports local communities and preserves ancient crafting traditions.
+              Connect with Kenya's finest artisans and discover one-of-a-kind
+              treasures that carry the soul of our rich cultural heritage. Every
+              purchase supports local communities and preserves ancient crafting
+              traditions.
             </p>
-            
+
             {/* User Role Selection */}
             <div className="mb-8">
               <p className="text-lg mb-4 opacity-90">Choose your journey:</p>
@@ -71,7 +78,7 @@ export default function Home() {
                 </Link>
               </div>
             </div>
-            
+
             <div className="flex justify-center">
               <Link href="/about">
                 <Button className="bg-kenyan-red text-white px-8 py-3 rounded-lg font-semibold hover:bg-red-700 transition-all duration-300 transform hover:scale-105 shadow-lg btn-glow hover:shadow-kenyan-red/25">
@@ -82,7 +89,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-        
+
         {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
           <i className="fas fa-chevron-down text-white text-2xl opacity-70"></i>
@@ -93,7 +100,7 @@ export default function Home() {
       <section className="py-20 bg-white relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-kenyan-orange opacity-3 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-kenyan-gold opacity-5 rounded-full blur-2xl"></div>
-        
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="text-center mb-16">
             <span className="inline-flex items-center px-4 py-2 bg-kenyan-orange bg-opacity-10 rounded-full text-kenyan-orange font-semibold text-sm mb-4">
@@ -104,7 +111,8 @@ export default function Home() {
               Authentic • Sustainable • Community-Driven
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              More than just shopping - join a movement that preserves cultural heritage and empowers artisan communities.
+              More than just shopping - join a movement that preserves cultural
+              heritage and empowers artisan communities.
             </p>
           </div>
 
@@ -113,24 +121,36 @@ export default function Home() {
               <div className="w-20 h-20 bg-kenyan-orange bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-kenyan-orange group-hover:bg-opacity-20 transition-colors">
                 <i className="fas fa-certificate text-kenyan-orange text-3xl"></i>
               </div>
-              <h3 className="font-cultural text-2xl font-semibold text-kenyan-dark mb-4">100% Authentic</h3>
-              <p className="text-gray-600 text-lg leading-relaxed">Every piece verified by cultural experts and master artisans</p>
+              <h3 className="font-cultural text-2xl font-semibold text-kenyan-dark mb-4">
+                100% Authentic
+              </h3>
+              <p className="text-gray-600 text-lg leading-relaxed">
+                Every piece verified by cultural experts and master artisans
+              </p>
             </div>
 
             <div className="text-center group transform transition-all duration-300 hover:scale-105 px-6 py-8 rounded-xl hover:bg-gray-50">
               <div className="w-20 h-20 bg-kenyan-gold bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-kenyan-gold group-hover:bg-opacity-20 transition-colors">
                 <i className="fas fa-shipping-fast text-kenyan-gold text-3xl"></i>
               </div>
-              <h3 className="font-cultural text-2xl font-semibold text-kenyan-dark mb-4">Global Shipping</h3>
-              <p className="text-gray-600 text-lg leading-relaxed">Secure worldwide delivery with tracking and insurance</p>
+              <h3 className="font-cultural text-2xl font-semibold text-kenyan-dark mb-4">
+                Global Shipping
+              </h3>
+              <p className="text-gray-600 text-lg leading-relaxed">
+                Secure worldwide delivery with tracking and insurance
+              </p>
             </div>
 
             <div className="text-center group transform transition-all duration-300 hover:scale-105 px-6 py-8 rounded-xl hover:bg-gray-50">
               <div className="w-20 h-20 bg-kenyan-green bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-kenyan-green group-hover:bg-opacity-20 transition-colors">
                 <i className="fas fa-seedling text-kenyan-green text-3xl"></i>
               </div>
-              <h3 className="font-cultural text-2xl font-semibold text-kenyan-dark mb-4">Fair Trade</h3>
-              <p className="text-gray-600 text-lg leading-relaxed">Direct support to artisans with transparent pricing</p>
+              <h3 className="font-cultural text-2xl font-semibold text-kenyan-dark mb-4">
+                Fair Trade
+              </h3>
+              <p className="text-gray-600 text-lg leading-relaxed">
+                Direct support to artisans with transparent pricing
+              </p>
             </div>
           </div>
         </div>
@@ -144,7 +164,8 @@ export default function Home() {
               Discover Our Collections
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Explore authentic Kenyan crafts, each category representing centuries of cultural tradition and artistic mastery.
+              Explore authentic Kenyan crafts, each category representing
+              centuries of cultural tradition and artistic mastery.
             </p>
           </div>
 
@@ -159,7 +180,11 @@ export default function Home() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
               {categories?.map((category, index) => (
-                <div key={category.id} className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 bg-white" style={{animationDelay: `${index * 100}ms`}}>
+                <div
+                  key={category.id}
+                  className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 bg-white"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
                   <Link href={`/products?category=${category.id}`}>
                     <div className="relative h-72 overflow-hidden">
                       <img
@@ -169,7 +194,7 @@ export default function Home() {
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60"></div>
                       <div className="absolute inset-0 bg-kenyan-orange opacity-0 group-hover:opacity-15 transition-opacity duration-300"></div>
-                      
+
                       <div className="absolute bottom-6 left-6 right-6 text-white">
                         <h3 className="font-cultural text-2xl font-bold mb-2 group-hover:text-kenyan-beige transition-colors leading-tight">
                           {category.name}
@@ -178,7 +203,7 @@ export default function Home() {
                           {category.description}
                         </p>
                       </div>
-                      
+
                       <div className="absolute top-6 right-6 w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-sm">
                         <i className="fas fa-arrow-right text-white text-base"></i>
                       </div>
@@ -199,7 +224,8 @@ export default function Home() {
               Featured Products
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Handpicked selection of our most popular items, crafted by master artisans across Kenya.
+              Handpicked selection of our most popular items, crafted by master
+              artisans across Kenya.
             </p>
           </div>
 
@@ -221,7 +247,10 @@ export default function Home() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 lg:gap-10">
               {featuredProducts?.map((product) => (
-                <div key={product.id} className="transform transition-all duration-300 hover:scale-105">
+                <div
+                  key={product.id}
+                  className="transform transition-all duration-300 hover:scale-105"
+                >
                   <ProductCard product={product} />
                 </div>
               ))}
@@ -247,10 +276,17 @@ export default function Home() {
                 Our Cultural Heritage
               </h2>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                Each piece in our collection represents generations of cultural knowledge passed down through families of skilled artisans. From the intricate beadwork of the Maasai to the masterful wood carvings of the Kikuyu, every item tells a story of Kenya's rich cultural tapestry.
+                Each piece in our collection represents generations of cultural
+                knowledge passed down through families of skilled artisans. From
+                the intricate beadwork of the Maasai to the masterful wood
+                carvings of the Kikuyu, every item tells a story of Kenya's rich
+                cultural tapestry.
               </p>
               <p className="text-xl text-gray-600 mb-10 leading-relaxed">
-                By purchasing from Kifaru Crafts, you're not just acquiring beautiful handmade items – you're supporting local communities, preserving traditional techniques, and keeping Kenya's cultural heritage alive for future generations.
+                By purchasing from Kifaru Crafts, you're not just acquiring
+                beautiful handmade items – you're supporting local communities,
+                preserving traditional techniques, and keeping Kenya's cultural
+                heritage alive for future generations.
               </p>
               <Link href="/about">
                 <Button className="bg-kenyan-orange text-white px-10 py-4 rounded-xl font-semibold hover:bg-kenyan-red transition-all duration-300 transform hover:scale-105 text-lg shadow-lg">
@@ -278,9 +314,12 @@ export default function Home() {
       {/* Newsletter Section */}
       <section className="py-24 bg-gradient-to-r from-kenyan-orange to-kenyan-red text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="font-cultural text-4xl md:text-5xl font-bold mb-6">Stay Connected</h2>
+          <h2 className="font-cultural text-4xl md:text-5xl font-bold mb-6">
+            Stay Connected
+          </h2>
           <p className="text-2xl mb-12 leading-relaxed">
-            Get updates on new arrivals, artisan stories, and exclusive cultural insights delivered to your inbox.
+            Get updates on new arrivals, artisan stories, and exclusive cultural
+            insights delivered to your inbox.
           </p>
           <form className="flex flex-col sm:flex-row max-w-lg mx-auto gap-4">
             <Input

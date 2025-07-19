@@ -182,7 +182,7 @@ export default function Header() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem disabled>
-                    {user.name} ({user.role})
+                    {user.firstName} {user.lastName} ({user.role})
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link

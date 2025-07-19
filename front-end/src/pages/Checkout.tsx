@@ -8,7 +8,6 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { useCurrencyStore } from "@/lib/store";
 import { formatKESPrice } from "@/lib/currency";
 import { Smartphone, CreditCard, ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
@@ -32,7 +31,6 @@ export default function Checkout() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const { toast } = useToast();
-  const { currency } = useCurrencyStore();
 
   const { data: cartItems = [], isLoading } = useQuery<CartItemWithProduct[]>({
     queryKey: ["/api/cart"],
@@ -40,16 +38,21 @@ export default function Checkout() {
 
   const processPaymentMutation = useMutation({
     mutationFn: async (paymentData: any) => {
-      const response = await apiRequest("POST", "/api/process-payment", paymentData);
+      const response = await apiRequest(
+        "POST",
+        "/api/process-payment",
+        paymentData
+      );
       return response.json();
     },
     onSuccess: (data) => {
       if (data.success) {
         toast({
           title: "Payment Successful!",
-          description: paymentMethod === "mpesa" 
-            ? "M-Pesa payment initiated. Check your phone for the payment prompt."
-            : "Payment processed successfully. Thank you for your purchase!",
+          description:
+            paymentMethod === "mpesa"
+              ? "M-Pesa payment initiated. Check your phone for the payment prompt."
+              : "Payment processed successfully. Thank you for your purchase!",
         });
         queryClient.invalidateQueries({ queryKey: ["/api/cart"] });
         setIsProcessing(false);
@@ -68,7 +71,7 @@ export default function Checkout() {
   });
 
   const total = cartItems.reduce((sum, item) => {
-    return sum + (parseFloat(item.product.price) * item.quantity);
+    return sum + parseFloat(item.product.price) * item.quantity;
   }, 0);
 
   const handlePayment = async () => {
@@ -76,7 +79,8 @@ export default function Checkout() {
       if (!phoneNumber || phoneNumber.length < 10) {
         toast({
           title: "Invalid Phone Number",
-          description: "Please enter a valid Kenyan phone number (e.g., 0700123456)",
+          description:
+            "Please enter a valid Kenyan phone number (e.g., 0700123456)",
           variant: "destructive",
         });
         return;
@@ -84,7 +88,7 @@ export default function Checkout() {
     }
 
     setIsProcessing(true);
-    
+
     const paymentData = {
       items: cartItems,
       total: total,
@@ -116,8 +120,12 @@ export default function Checkout() {
   if (cartItems.length === 0) {
     return (
       <div className="container mx-auto px-4 py-8 text-center">
-        <h1 className="text-2xl font-bold text-kenyan-dark mb-4">Your cart is empty</h1>
-        <p className="text-gray-600 mb-6">Add some beautiful Kenyan crafts to your cart first.</p>
+        <h1 className="text-2xl font-bold text-kenyan-dark mb-4">
+          Your cart is empty
+        </h1>
+        <p className="text-gray-600 mb-6">
+          Add some beautiful Kenyan crafts to your cart first.
+        </p>
         <Link href="/products">
           <Button className="bg-kenyan-orange hover:bg-kenyan-orange/90">
             Browse Products
@@ -148,7 +156,10 @@ export default function Checkout() {
             </CardHeader>
             <CardContent className="space-y-4">
               {cartItems.map((item) => (
-                <div key={item.id} className="flex justify-between items-center">
+                <div
+                  key={item.id}
+                  className="flex justify-between items-center"
+                >
                   <div className="flex items-center space-x-3">
                     <img
                       src={item.product.image}
@@ -157,18 +168,24 @@ export default function Checkout() {
                     />
                     <div>
                       <h4 className="font-medium">{item.product.name}</h4>
-                      <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
+                      <p className="text-sm text-gray-600">
+                        Qty: {item.quantity}
+                      </p>
                     </div>
                   </div>
                   <p className="font-semibold">
-                    {formatKESPrice(parseFloat(item.product.price) * item.quantity)}
+                    {formatKESPrice(
+                      parseFloat(item.product.price) * item.quantity
+                    )}
                   </p>
                 </div>
               ))}
               <Separator />
               <div className="flex justify-between items-center text-lg font-bold">
                 <span>Total</span>
-                <span className="text-kenyan-orange">{formatKESPrice(total)}</span>
+                <span className="text-kenyan-orange">
+                  {formatKESPrice(total)}
+                </span>
               </div>
             </CardContent>
           </Card>
@@ -195,9 +212,13 @@ export default function Checkout() {
                     <Smartphone className="w-6 h-6 text-green-600" />
                     <div>
                       <h3 className="font-semibold">M-Pesa</h3>
-                      <p className="text-sm text-gray-600">Pay with your mobile money</p>
+                      <p className="text-sm text-gray-600">
+                        Pay with your mobile money
+                      </p>
                     </div>
-                    <Badge variant="secondary" className="ml-auto">Recommended</Badge>
+                    <Badge variant="secondary" className="ml-auto">
+                      Recommended
+                    </Badge>
                   </div>
                 </div>
 
@@ -213,7 +234,9 @@ export default function Checkout() {
                     <CreditCard className="w-6 h-6 text-blue-600" />
                     <div>
                       <h3 className="font-semibold">Credit/Debit Card</h3>
-                      <p className="text-sm text-gray-600">Visa, Mastercard, etc.</p>
+                      <p className="text-sm text-gray-600">
+                        Visa, Mastercard, etc.
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -236,9 +259,11 @@ export default function Checkout() {
                       Enter your M-Pesa registered phone number
                     </p>
                   </div>
-                  
+
                   <div className="bg-green-50 p-4 rounded-lg">
-                    <h4 className="font-semibold text-green-800 mb-2">How M-Pesa payment works:</h4>
+                    <h4 className="font-semibold text-green-800 mb-2">
+                      How M-Pesa payment works:
+                    </h4>
                     <ol className="text-sm text-green-700 space-y-1">
                       <li>1. Click "Pay with M-Pesa" below</li>
                       <li>2. You'll receive an SMS with payment prompt</li>
@@ -253,8 +278,8 @@ export default function Checkout() {
                 <div className="space-y-4">
                   <div className="bg-blue-50 p-4 rounded-lg">
                     <p className="text-sm text-blue-700">
-                      Card payments are processed securely through our payment gateway.
-                      You'll be redirected to complete your payment.
+                      Card payments are processed securely through our payment
+                      gateway. You'll be redirected to complete your payment.
                     </p>
                   </div>
                 </div>
@@ -274,14 +299,17 @@ export default function Checkout() {
                   </div>
                 ) : (
                   <>
-                    {paymentMethod === "mpesa" ? "Pay with M-Pesa" : "Pay with Card"} - {formatKESPrice(total)}
+                    {paymentMethod === "mpesa"
+                      ? "Pay with M-Pesa"
+                      : "Pay with Card"}{" "}
+                    - {formatKESPrice(total)}
                   </>
                 )}
               </Button>
 
               <p className="text-xs text-gray-500 text-center">
-                By proceeding, you agree to our terms and conditions. 
-                Your payment is secure and encrypted.
+                By proceeding, you agree to our terms and conditions. Your
+                payment is secure and encrypted.
               </p>
             </CardContent>
           </Card>

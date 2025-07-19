@@ -1,10 +1,13 @@
-import { useState } from "react";
 import { useRoute } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, ShoppingCart } from "lucide-react";
@@ -20,14 +23,21 @@ export default function ProductDetail() {
   const { toast } = useToast();
   const { currency: userCurrency } = useCurrencyStore();
 
-  const { data: product, isLoading, error } = useQuery<Product>({
+  const {
+    data: product,
+    isLoading,
+    error,
+  } = useQuery<Product>({
     queryKey: [`/api/products/${productId}`],
     enabled: !!productId,
   });
 
   const addToCartMutation = useMutation({
     mutationFn: (quantity: number) =>
-      apiRequest("POST", "/api/cart", { productId: parseInt(productId!), quantity }),
+      apiRequest("POST", "/api/cart", {
+        productId: parseInt(productId!),
+        quantity,
+      }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/cart"] });
       toast({
@@ -89,7 +99,9 @@ export default function ProductDetail() {
       <div className="min-h-screen bg-kenyan-beige flex items-center justify-center">
         <Card className="w-full max-w-md mx-4">
           <CardContent className="pt-6 text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">Product Not Found</h1>
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">
+              Product Not Found
+            </h1>
             <p className="text-gray-600 mb-4">
               The product you're looking for doesn't exist or has been removed.
             </p>
@@ -110,7 +122,10 @@ export default function ProductDetail() {
         {/* Back Button */}
         <div className="mb-6">
           <Link href="/products">
-            <Button variant="ghost" className="text-kenyan-dark hover:text-kenyan-orange">
+            <Button
+              variant="ghost"
+              className="text-kenyan-dark hover:text-kenyan-orange"
+            >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Products
             </Button>
@@ -156,26 +171,40 @@ export default function ProductDetail() {
             <div className="flex items-center justify-between border-t border-gray-200 pt-6">
               <div>
                 {(() => {
-                  const priceDisplay = getPriceWithConversion(product.price, userCurrency);
+                  const priceDisplay = getPriceWithConversion(
+                    product.price,
+                    userCurrency
+                  );
                   return priceDisplay.secondary ? (
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <div className="cursor-help">
-                          <span className="text-3xl font-bold text-kenyan-orange">{priceDisplay.primary}</span>
-                          <div className="text-sm text-gray-500">{priceDisplay.secondary}</div>
+                          <span className="text-3xl font-bold text-kenyan-orange">
+                            {priceDisplay.primary}
+                          </span>
+                          <div className="text-sm text-gray-500">
+                            {priceDisplay.secondary}
+                          </div>
                         </div>
                       </TooltipTrigger>
                       <TooltipContent>
-                        <p>Original price in Kenyan Shillings: {priceDisplay.secondary}</p>
+                        <p>
+                          Original price in Kenyan Shillings:{" "}
+                          {priceDisplay.secondary}
+                        </p>
                       </TooltipContent>
                     </Tooltip>
                   ) : (
-                    <span className="text-3xl font-bold text-kenyan-orange">{priceDisplay.primary}</span>
+                    <span className="text-3xl font-bold text-kenyan-orange">
+                      {priceDisplay.primary}
+                    </span>
                   );
                 })()}
                 <div className="text-sm text-gray-500 mt-1">
                   {(product.stock || 0) > 0 ? (
-                    <span className="text-kenyan-green">In stock ({product.stock || 0} available)</span>
+                    <span className="text-kenyan-green">
+                      In stock ({product.stock || 0} available)
+                    </span>
                   ) : (
                     <span className="text-red-500">Out of stock</span>
                   )}
@@ -201,12 +230,16 @@ export default function ProductDetail() {
                 <div className="text-center p-4 bg-white rounded-lg shadow">
                   <i className="fas fa-shipping-fast text-kenyan-orange text-2xl mb-2"></i>
                   <div className="text-sm font-semibold">Free Shipping</div>
-                  <div className="text-xs text-gray-500">On orders over $50</div>
+                  <div className="text-xs text-gray-500">
+                    On orders over $50
+                  </div>
                 </div>
                 <div className="text-center p-4 bg-white rounded-lg shadow">
                   <i className="fas fa-heart text-kenyan-orange text-2xl mb-2"></i>
                   <div className="text-sm font-semibold">Handcrafted</div>
-                  <div className="text-xs text-gray-500">By skilled artisans</div>
+                  <div className="text-xs text-gray-500">
+                    By skilled artisans
+                  </div>
                 </div>
               </div>
             </div>
@@ -218,7 +251,11 @@ export default function ProductDetail() {
                   Cultural Heritage
                 </h3>
                 <p className="text-gray-600 leading-relaxed">
-                  This beautiful piece represents the rich cultural heritage of Kenya. Each item is carefully handcrafted using traditional techniques passed down through generations, ensuring that every piece is unique and carries the spirit of Kenyan artistry.
+                  This beautiful piece represents the rich cultural heritage of
+                  Kenya. Each item is carefully handcrafted using traditional
+                  techniques passed down through generations, ensuring that
+                  every piece is unique and carries the spirit of Kenyan
+                  artistry.
                 </p>
               </CardContent>
             </Card>

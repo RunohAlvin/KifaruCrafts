@@ -2,14 +2,14 @@ import { z } from "zod";
 
 // MongoDB User Schema
 export const userSchema = z.object({
-  id: z.string().optional(), // Use 'id' instead of '_id' for consistency
+  id: z.union([z.string(), z.number()]).optional(), // Support both string and number IDs
   email: z.string().email(),
   password: z.string().min(6),
   firstName: z.string().optional(),
   lastName: z.string().optional(),
   role: z.enum(["customer", "vendor"]).default("customer"),
   profileImageUrl: z.string().optional(),
-  
+
   // Vendor-specific fields
   businessName: z.string().optional(),
   bio: z.string().optional(),
@@ -18,25 +18,25 @@ export const userSchema = z.object({
   specialties: z.string().optional(),
   yearsOfExperience: z.number().optional(),
   isVerified: z.boolean().default(false),
-  
+
   // Contact information
   whatsappNumber: z.string().optional(),
   instagramHandle: z.string().optional(),
   facebookPage: z.string().optional(),
   website: z.string().optional(),
-  
+
   // Payment details
   mpesaNumber: z.string().optional(),
   bankDetails: z.string().optional(),
   acceptedPaymentMethods: z.array(z.string()).optional(),
-  
+
   createdAt: z.date().default(() => new Date()),
   updatedAt: z.date().default(() => new Date()),
 });
 
 // MongoDB Category Schema
 export const categorySchema = z.object({
-  id: z.string().optional(),
+  id: z.union([z.string(), z.number()]).optional(),
   name: z.string(),
   description: z.string().optional(),
   image: z.string().optional(),
@@ -44,7 +44,7 @@ export const categorySchema = z.object({
 
 // MongoDB Product Schema
 export const productSchema = z.object({
-  //id: z.string().optional(),
+  id: z.union([z.string(), z.number()]).optional(),
   name: z.string().min(1, "Product name is required"),
   description: z.string().min(1, "Product description is required"),
   price: z.string().min(1, "Product price is required"), // Store as string to avoid floating point issues
@@ -58,7 +58,7 @@ export const productSchema = z.object({
 
 // MongoDB Cart Item Schema
 export const cartItemSchema = z.object({
-  id: z.string().optional(),
+  id: z.union([z.string(), z.number()]).optional(),
   productId: z.string(),
   quantity: z.number().default(1),
   sessionId: z.string(),
@@ -76,7 +76,7 @@ export const loginUserSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
-export const registerUserSchema = insertUserSchema.extend({
+export const registerUserSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   firstName: z.string().min(1, "First name is required"),

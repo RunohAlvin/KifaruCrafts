@@ -1,6 +1,6 @@
 import express from 'express';
-import User from '../models/User.ts';
-import Product from '../models/Product.ts';
+import User from '../models/User';
+import Product from '../models/Product';
 
 const router = express.Router();
 

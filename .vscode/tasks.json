@@ -16,7 +16,7 @@
     {
       "label": "Start Development Server",
       "type": "shell",
-      "command": "cross-env NODE_ENV=development tsx server/index.ts",
+      "command": "cross-env NODE_ENV=development tsx server/src/server.ts",
       "group": {
         "kind": "build",
         "isDefault": true

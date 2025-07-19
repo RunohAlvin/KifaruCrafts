@@ -1,6 +1,6 @@
-import express from 'express';
-import User from '../models/User.ts';
-import { z } from 'zod';
+import express from "express";
+import User from "../models/User";
+import { z } from "zod";
 
 const router = express.Router();
 
@@ -10,23 +10,23 @@ const registerSchema = z.object({
   password: z.string().min(6),
   firstName: z.string().min(1),
   lastName: z.string().min(1),
-  role: z.enum(['customer', 'vendor']).default('customer')
+  role: z.enum(["customer", "vendor"]).default("customer"),
 });
 
 const loginSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(1)
+  password: z.string().min(1),
 });
 
 // Register
-router.post('/register', async (req, res) => {
+router.post("/register", async (req, res) => {
   try {
     const validatedData = registerSchema.parse(req.body);
-    
+
     // Check if user already exists
     const existingUser = await User.findOne({ email: validatedData.email });
     if (existingUser) {
-      return res.status(400).json({ message: 'User already exists' });
+      return res.status(400).json({ message: "User already exists" });
     }
 
     // Create new user
@@ -34,8 +34,8 @@ router.post('/register', async (req, res) => {
     await user.save();
 
     // Store user in session
-    req.session.userId = user._id.toString();
-    req.session.userRole = user.role;
+    (req.session as any).userId = (user._id as any).toString();
+    (req.session as any).userRole = user.role;
 
     // Return user without password
     const userResponse = {
@@ -44,39 +44,41 @@ router.post('/register', async (req, res) => {
       firstName: user.firstName,
       lastName: user.lastName,
       role: user.role,
-      isVerified: user.isVerified
+      isVerified: user.isVerified,
     };
 
     res.status(201).json({ user: userResponse });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ message: 'Validation error', errors: error.errors });
+      return res
+        .status(400)
+        .json({ message: "Validation error", errors: error.issues });
     }
-    console.error('Registration error:', error);
-    res.status(500).json({ message: 'Server error' });
+    console.error("Registration error:", error);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
 // Login
-router.post('/login', async (req, res) => {
+router.post("/login", async (req, res) => {
   try {
     const validatedData = loginSchema.parse(req.body);
-    
+
     // Find user
     const user = await User.findOne({ email: validatedData.email });
     if (!user) {
-      return res.status(400).json({ message: 'Invalid credentials' });
+      return res.status(400).json({ message: "Invalid credentials" });
     }
 
     // Check password
     const isMatch = await user.comparePassword(validatedData.password);
     if (!isMatch) {
-      return res.status(400).json({ message: 'Invalid credentials' });
+      return res.status(400).json({ message: "Invalid credentials" });
     }
 
     // Store user in session
-    req.session.userId = user._id.toString();
-    req.session.userRole = user.role;
+    (req.session as any).userId = (user._id as any).toString();
+    (req.session as any).userRole = user.role;
 
     // Return user without password
     const userResponse = {
@@ -88,45 +90,47 @@ router.post('/login', async (req, res) => {
       isVerified: user.isVerified,
       businessName: user.businessName,
       bio: user.bio,
-      location: user.location
+      location: user.location,
     };
 
     res.json({ user: userResponse });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ message: 'Validation error', errors: error.errors });
+      return res
+        .status(400)
+        .json({ message: "Validation error", errors: error.issues });
     }
-    console.error('Login error:', error);
-    res.status(500).json({ message: 'Server error' });
+    console.error("Login error:", error);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
 // Logout
-router.post('/logout', (req, res) => {
+router.post("/logout", (req, res) => {
   req.session.destroy((err) => {
     if (err) {
-      return res.status(500).json({ message: 'Could not log out' });
+      return res.status(500).json({ message: "Could not log out" });
     }
-    res.json({ message: 'Logged out successfully' });
+    res.json({ message: "Logged out successfully" });
   });
 });
 
 // Get current user
-router.get('/me', async (req, res) => {
+router.get("/me", async (req, res) => {
   try {
-    if (!req.session.userId) {
-      return res.status(401).json({ message: 'Not authenticated' });
+    if (!(req.session as any).userId) {
+      return res.status(401).json({ message: "Not authenticated" });
     }
 
-    const user = await User.findById(req.session.userId).select('-password');
+    const user = await User.findById((req.session as any).userId).select("-password");
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     res.json({ user });
   } catch (error) {
-    console.error('Get user error:', error);
-    res.status(500).json({ message: 'Server error' });
+    console.error("Get user error:", error);
+    res.status(500).json({ message: "Server error" });
   }
 });
 

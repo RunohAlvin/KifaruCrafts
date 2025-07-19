@@ -1,31 +1,82 @@
-const express = require("express");
-import type { Response, Request } from "express";
-import { config } from "dotenv";
+import express from "express";
+import session from "express-session";
+import cors from "cors";
+import type { Request, Response, NextFunction } from "express";
+import { env, validateEnvironment } from "./config/environment";
+import { dbConnect } from "./db/dbconnect";
 
-config()
+// Import routes
+import authRoutes from "./routes/auth";
+import productRoutes from "./routes/products";
+import categoryRoutes from "./routes/categories";
+import vendorRoutes from "./routes/vendors";
+import cartRoutes from "./routes/cart";
 
-//variables
-const PORT = process.env.PORT || 5000;
+// Validate environment variables
+validateEnvironment();
 
-//create app
 const app = express();
 
-//use meddilesraw
-app.use(express.json())
-
-//run db connectio
-import { dbConnect } from "./db/dbconnect";
+// Database connection
 dbConnect();
 
+// Middleware
+app.use(cors());
 
-//products
-//app.use("/products", productRouter)
-// users
-//ppapp.use("/users", userRouter)
-//routes
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true }));
+
+// Session configuration
+app.use(
+  session({
+    secret: env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: env.NODE_ENV === "production",
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    },
+  })
+);
+
+// Routes
+app.use("/api/auth", authRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/categories", categoryRoutes);
+app.use("/api/vendors", vendorRoutes);
+app.use("/api/cart", cartRoutes);
+
+// Health check route
 app.get("/", (req: Request, res: Response) => {
-  res.json({ msg: "Hello from server app" });
+  res.json({
+    message: "KifaruCrafts API Server",
+    status: "running",
+    timestamp: new Date().toISOString(),
+  });
 });
-//start server
-app.listen(PORT, () => console.log(`Server is running on PORT ${PORT}`));
 
+// 404 handler
+app.use((req: Request, res: Response) => {
+  res.status(404).json({ message: "Route not found" });
+});
+
+// Global error handler
+app.use((error: any, req: Request, res: Response, next: NextFunction) => {
+  console.error("Server error:", error);
+  res.status(500).json({
+    message: "Internal server error",
+    ...(env.NODE_ENV === "development" && { error: error.message }),
+  });
+});
+
+// Start server
+if (process.env.NODE_ENV !== "test") {
+  app.listen(env.PORT, () => {
+    console.log(`🚀 Server running on port ${env.PORT}`);
+    console.log(`📊 Environment: ${env.NODE_ENV}`);
+    console.log(`🔗 API Base URL: http://localhost:${env.PORT}/api`);
+  });
+}
+
+export default app;

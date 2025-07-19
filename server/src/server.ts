@@ -16,12 +16,28 @@ import cartRoutes from "./routes/cart";
 validateEnvironment();
 
 const app = express();
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 5000;
 // Database connection
 dbConnect();
 
+// CORS configuration
+const corsOptions = {
+  origin: [
+    "http://localhost:5173", // Vite dev server default port
+    "http://localhost:3000", // Alternative dev port
+    "http://127.0.0.1:5173",
+    "http://127.0.0.1:3000",
+    "https://kifarucrafts.onrender.com", // Production frontend
+    "https://localhost:5173", // HTTPS local dev
+  ],
+  credentials: true, // Allow credentials (cookies, sessions)
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+  exposedHeaders: ["Set-Cookie"],
+};
+
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
@@ -33,9 +49,10 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: env.NODE_ENV === "production",
-      httpOnly: true,
+      secure: env.NODE_ENV === "production", // HTTPS only in production
+      httpOnly: true, // Prevent XSS attacks
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      sameSite: env.NODE_ENV === "production" ? "strict" : "lax", // CORS-friendly in development
     },
   })
 );
@@ -72,11 +89,9 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
 
 // Start server
 // if (process.env.NODE_ENV !== "test") {
-  app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${env.PORT}`);
-    console.log(`📊 Environment: ${env.NODE_ENV}`);
-    console.log(`🔗 API Base URL: http://localhost:${env.PORT}/api`);
-  });
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${env.PORT}`);
+  console.log(`📊 Environment: ${env.NODE_ENV}`);
+  console.log(`🔗 API Base URL: http://localhost:${env.PORT}/api`);
+});
 // }
-
-

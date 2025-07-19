@@ -12,6 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MapPin, Phone, Calendar, Award, Mail } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
 import type { ApiProduct } from "@/types/api";
+import { buildApiUrl } from "@/lib/api";
 
 export default function VendorProfile() {
   const [params] = useRoute("/vendors/:id");
@@ -25,7 +26,7 @@ export default function VendorProfile() {
   const { data: vendor, isLoading: vendorLoading } = useQuery({
     queryKey: ["/api/vendors", vendorId],
     queryFn: async () => {
-      const response = await fetch(`/api/vendors/${vendorId}`);
+      const response = await fetch(buildApiUrl(`/api/vendors/${vendorId}`));
       if (!response.ok) throw new Error("Failed to fetch vendor");
       return response.json();
     },
@@ -35,7 +36,9 @@ export default function VendorProfile() {
   const { data: products = [], isLoading: productsLoading } = useQuery({
     queryKey: ["/api/vendors", vendorId, "products"],
     queryFn: async () => {
-      const response = await fetch(`/api/vendors/${vendorId}/products`);
+      const response = await fetch(
+        buildApiUrl(`/api/vendors/${vendorId}/products`)
+      );
       if (!response.ok) throw new Error("Failed to fetch vendor products");
       return response.json();
     },

@@ -16,7 +16,7 @@ import cartRoutes from "./routes/cart";
 validateEnvironment();
 
 const app = express();
-
+const PORT = process.env.PORT || 5000
 // Database connection
 dbConnect();
 
@@ -71,12 +71,12 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
 });
 
 // Start server
-if (process.env.NODE_ENV !== "test") {
-  app.listen(env.PORT, () => {
+// if (process.env.NODE_ENV !== "test") {
+  app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${env.PORT}`);
     console.log(`📊 Environment: ${env.NODE_ENV}`);
     console.log(`🔗 API Base URL: http://localhost:${env.PORT}/api`);
   });
-}
+// }
 
-export default app;
+

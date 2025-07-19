@@ -1,9 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MapPin, Award, Users, Package } from "lucide-react";
+import { buildApiUrl } from "@/lib/api";
 
 interface Vendor {
   id: number;
@@ -25,13 +32,17 @@ export default function Vendors() {
   const { data: vendors = [], isLoading } = useQuery({
     queryKey: ["/api/vendors"],
     queryFn: async () => {
-      const response = await fetch("/api/vendors");
+      const response = await fetch(buildApiUrl("/api/vendors"));
       if (!response.ok) throw new Error("Failed to fetch vendors");
       return response.json();
     },
   });
 
-  const getInitials = (firstName: string | null, lastName: string | null, businessName: string | null) => {
+  const getInitials = (
+    firstName: string | null,
+    lastName: string | null,
+    businessName: string | null
+  ) => {
     if (firstName && lastName) {
       return `${firstName[0]}${lastName[0]}`.toUpperCase();
     }
@@ -42,7 +53,11 @@ export default function Vendors() {
   };
 
   const getDisplayName = (vendor: Vendor) => {
-    return vendor.businessName || `${vendor.firstName || ""} ${vendor.lastName || ""}`.trim() || "Vendor";
+    return (
+      vendor.businessName ||
+      `${vendor.firstName || ""} ${vendor.lastName || ""}`.trim() ||
+      "Vendor"
+    );
   };
 
   if (isLoading) {
@@ -73,8 +88,9 @@ export default function Vendors() {
           Meet Our Artisans
         </h1>
         <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-          Discover the talented craftspeople behind every handmade treasure. Each artisan brings generations 
-          of skill, cultural heritage, and passionate creativity to their craft.
+          Discover the talented craftspeople behind every handmade treasure.
+          Each artisan brings generations of skill, cultural heritage, and
+          passionate creativity to their craft.
         </p>
         <div className="flex items-center justify-center gap-6 mt-6 text-sm text-gray-500">
           <div className="flex items-center gap-2">
@@ -103,26 +119,36 @@ export default function Vendors() {
                   <CardHeader className="text-center pb-4">
                     <div className="flex justify-center mb-4">
                       <Avatar className="w-20 h-20 group-hover:scale-105 transition-transform duration-300">
-                        <AvatarImage src={vendor.profileImageUrl || undefined} alt={displayName} />
+                        <AvatarImage
+                          src={vendor.profileImageUrl || undefined}
+                          alt={displayName}
+                        />
                         <AvatarFallback className="text-xl bg-gradient-to-br from-orange-400 to-red-500 text-white">
-                          {getInitials(vendor.firstName, vendor.lastName, vendor.businessName)}
+                          {getInitials(
+                            vendor.firstName,
+                            vendor.lastName,
+                            vendor.businessName
+                          )}
                         </AvatarFallback>
                       </Avatar>
                     </div>
-                    
+
                     <div className="space-y-2">
                       <div className="flex items-center justify-center gap-2">
                         <CardTitle className="text-xl text-center group-hover:text-orange-600 transition-colors">
                           {displayName}
                         </CardTitle>
                         {vendor.isVerified && (
-                          <Badge variant="secondary" className="bg-green-100 text-green-800 px-2 py-1">
+                          <Badge
+                            variant="secondary"
+                            className="bg-green-100 text-green-800 px-2 py-1"
+                          >
                             <Award className="w-3 h-3 mr-1" />
                             <span className="text-xs">Verified</span>
                           </Badge>
                         )}
                       </div>
-                      
+
                       {vendor.location && (
                         <div className="flex items-center justify-center gap-1 text-sm text-gray-600">
                           <MapPin className="w-4 h-4" />
@@ -131,32 +157,42 @@ export default function Vendors() {
                       )}
                     </div>
                   </CardHeader>
-                  
+
                   <CardContent className="pt-0">
                     {vendor.specialties && (
                       <div className="flex flex-wrap gap-1 justify-center mb-4">
-                        {vendor.specialties.split(',').slice(0, 3).map((specialty, index) => (
-                          <Badge key={index} variant="outline" className="text-xs">
-                            {specialty.trim()}
-                          </Badge>
-                        ))}
-                        {vendor.specialties.split(',').length > 3 && (
+                        {vendor.specialties
+                          .split(",")
+                          .slice(0, 3)
+                          .map((specialty, index) => (
+                            <Badge
+                              key={index}
+                              variant="outline"
+                              className="text-xs"
+                            >
+                              {specialty.trim()}
+                            </Badge>
+                          ))}
+                        {vendor.specialties.split(",").length > 3 && (
                           <Badge variant="outline" className="text-xs">
-                            +{vendor.specialties.split(',').length - 3} more
+                            +{vendor.specialties.split(",").length - 3} more
                           </Badge>
                         )}
                       </div>
                     )}
-                    
+
                     {vendor.bio && (
                       <CardDescription className="text-center text-sm line-clamp-3 leading-relaxed">
                         {vendor.bio}
                       </CardDescription>
                     )}
-                    
+
                     {vendor.yearsOfExperience && (
                       <div className="mt-4 text-center">
-                        <Badge variant="secondary" className="bg-orange-100 text-orange-800">
+                        <Badge
+                          variant="secondary"
+                          className="bg-orange-100 text-orange-800"
+                        >
                           {vendor.yearsOfExperience} years experience
                         </Badge>
                       </div>
@@ -173,7 +209,9 @@ export default function Vendors() {
             <Users className="w-12 h-12 text-gray-400" />
           </div>
           <h3 className="text-xl font-semibold mb-2">No Vendors Found</h3>
-          <p className="text-gray-600">We're currently onboarding talented artisans. Check back soon!</p>
+          <p className="text-gray-600">
+            We're currently onboarding talented artisans. Check back soon!
+          </p>
         </div>
       )}
     </div>

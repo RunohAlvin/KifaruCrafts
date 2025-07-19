@@ -15,6 +15,7 @@ import { useCurrencyStore } from "@/lib/store";
 import type { ApiProduct } from "@/types/api";
 import { useQuery } from "@tanstack/react-query";
 import { User, ExternalLink } from "lucide-react";
+import { buildApiUrl } from "@/lib/api";
 
 interface ProductCardProps {
   product: ApiProduct;
@@ -29,7 +30,9 @@ export default function ProductCard({ product }: ProductCardProps) {
   const { data: vendor } = useQuery({
     queryKey: ["/api/vendors", product.vendorId],
     queryFn: async () => {
-      const response = await fetch(`/api/vendors/${product.vendorId}`);
+      const response = await fetch(
+        buildApiUrl(`/api/vendors/${product.vendorId}`)
+      );
       if (!response.ok) return null;
       return response.json();
     },
